@@ -3,7 +3,7 @@ const {z} = require('zod');
 //create schema for register
 const registerSchema = z.object({
     username: z
-    .string({required_error : "Email is requird"  }).trim()
+    .string({required_error : "username is requird"  }).trim()
     .min(3,{message : "name must be atleast of 3 characters"})
     .max(20,{message : "name should not be more than of 20 characters"}),
 

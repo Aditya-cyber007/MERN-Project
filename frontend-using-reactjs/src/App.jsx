@@ -6,6 +6,7 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Error from './pages/Error'
 import Logout from './components/Logout'
+import Footer from './pages/Footer'
 
 function App() {
   const[navbar,setNavbar]=useState(true)
@@ -26,6 +27,8 @@ function App() {
       <Route path="*" element={<Error  hideNavbar={hideNavbar}/>}/>
       <Route path="/logout" element={<Logout/>}/>
     </Routes>
+    {navbar?<Footer/>:null}
+
     </BrowserRouter>
 
     </>

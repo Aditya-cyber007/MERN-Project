@@ -1,0 +1,22 @@
+
+{
+    "verbose": true,
+    "transform": {
+        "^.+\\.jsx?$": "babel-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$",
+    "moduleFileExtensions": [
+        "js",
+        "jsx"
+    ],
+    "collectCoverage": true,
+    "coverageReporters": [
+        "html",
+        "text-summary"
+    ]
+
+}
+
+
+
+  

@@ -2,7 +2,8 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
-const router = require("./src/routes/auth-route");
+const authRouter = require("./src/routes/auth-route");
+const productRouter = require("./src/routes/product-route")
 const connectDb = require("./src/Database/dbConn");
 const errorMiddleware = require("./src/Middleware/error-middleware");
 const cors = require("cors");
@@ -16,12 +17,15 @@ const corsOptions = {
   optionSuccessStatus: 200,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
-app.use(cors());
+app.use(cors(
+  corsOptions
+));
 
 // Mount the Router: To use the router in your main Express app, you can "mount" it at a specific URL prefix
-app.use("/api/auth", router);
-
+app.use("/api/auth", authRouter);
+app.use("/api/product",productRouter);
 app.use(errorMiddleware);
+
 const PORT = 5000;
 connectDb().then(() => {
   app.listen(PORT, () => {

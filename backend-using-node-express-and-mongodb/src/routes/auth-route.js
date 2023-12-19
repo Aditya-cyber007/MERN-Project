@@ -11,3 +11,4 @@ router.route("/login").post( validate(loginSchema),login);
 router.route("/user").get(authMiddleware, user)
 
 module.exports = router;
+

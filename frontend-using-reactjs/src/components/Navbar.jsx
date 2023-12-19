@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
-import { getToken, setUserData } from '../features/Auth'
+import { getToken, getUserData } from '../features/Auth'
 
 const Navbar = () => {
 
   const navigate=useNavigate()
   const dispatch = useDispatch()
   const token = useSelector(state => state.auth.token)
-  dispatch(setUserData(token))
+  dispatch(getUserData(token))
   const isLogged = () => {
     if (token) {
       return true
@@ -28,8 +28,10 @@ const Navbar = () => {
 
 
   return (
-    <>
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <div >
+    <nav className="navbar navbar-expand-lg "
+    data-testid="navbar"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}    >
   <div className="container-fluid">
     <NavLink className="navbar-brand" to="/">Navbar</NavLink>
     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +52,7 @@ const Navbar = () => {
     </div>
   </div>
 </nav>
-    </>
+    </div>
   )
 }
 

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-export const setUserData =createAsyncThunk('auth/setUserData', async (data,{rejectWithValue}) => {
+export const getUserData =createAsyncThunk('auth/setUserData', async (data,{rejectWithValue}) => {
     if (!data) {
         return rejectWithValue('Invalid token');
     }
@@ -45,15 +45,15 @@ const authSlice = createSlice({
     },
     extraReducers (builder) {
 
-        builder.addCase(setUserData.pending, (state, action) => {
+        builder.addCase(getUserData.pending, (state, action) => {
             state.user = [];
         });
 
-        builder.addCase(setUserData.fulfilled, (state, action) => {
+        builder.addCase(getUserData.fulfilled, (state, action) => {
             state.user = action.payload;
         });
 
-        builder.addCase(setUserData.rejected, (state, action) => {
+        builder.addCase(getUserData.rejected, (state, action) => {
             state.user = [];
         });
 
