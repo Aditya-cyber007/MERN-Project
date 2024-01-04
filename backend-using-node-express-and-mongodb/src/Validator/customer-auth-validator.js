@@ -22,7 +22,6 @@ const customerRegisterSchema = z.object({
     .max(20,{message : "password should not be more than of 20 characters"}),
 });
 
-//create schema for login
 
 const customerLoginSchema = z.object({
     email: z
