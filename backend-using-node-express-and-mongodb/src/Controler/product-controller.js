@@ -67,17 +67,31 @@ const updateProduct = async (req, res) => {
 const searchedproducts = async (req, res) => {
     try {
         const { name } = req.params;
-        
-        // const product = await (Product.find({ name: { $regex: name, $options: "i" } }) || Product.findById(name));
-        //searching by name or by id
-        const product = await Product.find({ $or: [{ name: { $regex: name, $options: "i" } }, { _id: name }] });
-
-        res.status(200).json({
-            msg: "Product searched successfully",
-            product,
-        });
+        // if first letter of name starts with number then search _id else search name
+        if(isNaN(name[0])){
+            const product = await Product.find({ name: { $regex: name, $options: "i" } });
+            res.status(200).json({
+                msg: "Product searched successfully",
+                product,
+            });
+        }
+        else if (!isNaN(name[0])){
+            try{
+                const product = await Product.find({ _id: name });
+                res.status(200).json({
+                    msg: "Product searched successfully",
+                    product,
+                });
+            }
+            catch(err){
+                res.status(404).json({
+                    msg: "Product not found",
+                    product: [{}]
+                });
+            }
+        }
     } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server error",product: [{}] });
     }
 };
 

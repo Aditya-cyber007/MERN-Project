@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../features/Auth";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Signup = ({hideNavbar}) => {
+
+  const { seller } = useParams();
+
+  useEffect(() => {
+    hideNavbar()
+  }, [])
+
   const [username, setUsername] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -27,6 +34,7 @@ const Signup = () => {
   };
 
   const postData = async () => {
+    if(seller){
     const res = await fetch("http://localhost:5000/api/auth/register", {
       method: "POST",
       headers: {
@@ -50,6 +58,31 @@ const Signup = () => {
       window.alert("Invalid Registration");
       console.log("Invalid Registration");
     }
+  }
+  else{
+    const res = await fetch("http://localhost:5000/api/customer/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        phone: phone,
+        email: email,
+        password: password,
+      }),
+    });
+    const data = await res.json();
+    console.log(data);
+    if (res.ok) {
+      console.log("Registration Successful");
+    dispatch(setToken(data.token));
+      navigate("/customer");
+    } else {
+      window.alert("Invalid Registration");
+      console.log("Invalid Registration");
+    }
+  }
   };
 
   const handleSubmit = (e) => {

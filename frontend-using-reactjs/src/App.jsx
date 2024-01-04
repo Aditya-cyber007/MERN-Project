@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Error from './pages/Error'
 import Logout from './components/Logout'
 import Footer from './pages/Footer'
+import CustomerHome from './pages/CustomerHome'
 
 function App() {
   const[navbar,setNavbar]=useState(true)
@@ -21,12 +22,17 @@ function App() {
     <BrowserRouter>
     {navbar?<Navbar/>:null}
     <Routes>
+    
       <Route path="/" element={<Home showNavbar={showNavbar} />}/>
-      <Route path="/signup" element={<Signup/>}/>
-      <Route path="/login" element={<Login/>}/>
+      <Route path="/signup" element={<Signup hideNavbar={hideNavbar}/>}/>
+      <Route path="/login" element={<Login hideNavbar={hideNavbar}/>}/>
       <Route path="*" element={<Error  hideNavbar={hideNavbar}/>}/>
       <Route path="/logout" element={<Logout/>}/>
-    </Routes>
+      <Route path="/login/:seller" element={<Login hideNavbar={hideNavbar}/>}/>
+      <Route path="/signup/:seller" element={<Signup hideNavbar={hideNavbar}/>}/>
+      <Route path="/customer" element={<CustomerHome showNavbar={showNavbar}/>}/>
+      </Routes>
+
     {navbar?<Footer/>:null}
 
     </BrowserRouter>

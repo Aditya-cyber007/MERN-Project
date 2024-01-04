@@ -1,24 +1,36 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { NavLink,  } from "react-router-dom";
+import { NavLink, useParams,  } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
-import { setToken } from "../features/Auth";
+import { getCustomerData, getUserData, setToken } from "../features/Auth";
 
 
 
 
 
-const Login = () => {
+const Login = ({hideNavbar}) => {
+
+  const {seller}= useParams()
   const navigate = useNavigate();
   const token = useSelector(state => state.auth.token)
   const isLogged = () => {
     if (token) {
-      navigate('/')
+      if (seller){
+        dispatch(getUserData(token))
+        navigate('/')
+      }
+      else{
+        dispatch(getCustomerData(token))
+        navigate('/customer')
+      }
     }
   }
-
-  const [email, setEmail] = useState("");
+  useEffect(() => {
+    hideNavbar()
+  }, [])
+  
+const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [passwordVisibility, setPasswordVisibility] = useState(false);
 
@@ -30,6 +42,7 @@ const dispatch = useDispatch();
 
 const handleLogin = async (e) => {
   e.preventDefault();
+  if (seller){
   const res = await fetch("http://localhost:5000/api/auth/login", {
     method: "POST",
     headers: {
@@ -47,15 +60,39 @@ const handleLogin = async (e) => {
     dispatch(setToken(data.token));
     navigate("/");
   } else {
-    window.alert("Invalid Login");
+    alert("Invalid Login");
     console.log("Invalid Login");
   }
 }
+else{
+  const res = await fetch("http://localhost:5000/api/customer/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  });
+  const data = await res.json();
+  console.log(data);
+  if (res.ok ) {
+    console.log("Login Successful");
+    dispatch(setToken(data.token));
+    navigate("/customer");
+  } else {
+    alert("Invalid Login");
+    console.log("Invalid Login");
+  }
+
+}
+};
 
 useEffect(() => {
   isLogged()
 }
-, [])
+, [dispatch,token,seller ])
 
 
 

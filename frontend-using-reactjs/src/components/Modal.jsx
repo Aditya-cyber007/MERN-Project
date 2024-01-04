@@ -23,7 +23,7 @@ const Modal = ({ hideModal,editData} ) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if(editData){
-
+            alert("Product Updated Successfully")
             dispatch(updateProduct(product))
             console.log("Product Updated Successfully")
             hideModal()

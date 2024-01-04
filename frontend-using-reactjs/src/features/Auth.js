@@ -15,7 +15,11 @@ export const getUserData =createAsyncThunk('auth/setUserData', async (data,{reje
         if (response.ok) {
             const data = await response.json();
             return data;
-        } else {
+        }
+        else if (response.status === 401) {
+            return rejectWithValue('Invalid token');
+        }
+        else {
             return null;
         }
     } catch (error) {
@@ -23,6 +27,33 @@ export const getUserData =createAsyncThunk('auth/setUserData', async (data,{reje
     }
 }
 );
+
+export const getCustomerData =createAsyncThunk('auth/setCustomerData', async (data,{rejectWithValue}) => {
+    if (!data) {
+        return rejectWithValue('Invalid token');
+    }
+    const response = await fetch('http://localhost:5000/api/customer/user', {
+        method: 'GET',
+        headers: {
+            'authorization': `Bearer ${data}`,
+            'Content-Type': 'application/json',
+        }
+});
+    try {
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+        else if (response.status === 401) {
+            return rejectWithValue('Invalid token');
+        }
+        else {
+            return null;
+        }
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
 
 const authSlice = createSlice({
     name: 'auth',
@@ -51,10 +82,25 @@ const authSlice = createSlice({
 
         builder.addCase(getUserData.fulfilled, (state, action) => {
             state.user = action.payload;
+            console.log(action.payload)
         });
 
         builder.addCase(getUserData.rejected, (state, action) => {
+            //if token is invalid or expired
             state.user = [];
+            state.token = null;
+        });
+
+        builder.addCase(getCustomerData.pending, (state, action) => {
+            state.user = [];
+        });
+        builder.addCase(getCustomerData.fulfilled, (state, action) => {
+            state.user = action.payload;
+            console.log(action.payload)
+        });
+        builder.addCase(getCustomerData.rejected, (state, action) => {
+            state.user = [];
+            state.token = null;
         });
 
     },

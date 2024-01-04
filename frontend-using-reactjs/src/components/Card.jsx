@@ -63,7 +63,11 @@ const Card = ({product}) => {
           style={{ height: "330px" }}
         />
         <div className="card-body">
+
           <h5 className="card-title">{product.name}</h5>
+          <p className="card-text m-0">
+            <strong>Product ID :</strong> {product._id}
+          </p>
           <p className="card-text m-0">
             <strong>Price:</strong> {product.price}
           </p>

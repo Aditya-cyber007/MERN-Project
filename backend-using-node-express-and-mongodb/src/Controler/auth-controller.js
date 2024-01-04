@@ -66,6 +66,8 @@ const user = async (req, res) => {
     const token = await req.token;
     console.log(user)
     res.status(200).json({ user });
+    
+
   } catch (error) {
      res.status(500).json({ message: "Internal server error" });
   }

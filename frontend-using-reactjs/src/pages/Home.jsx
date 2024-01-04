@@ -12,6 +12,7 @@ const Home = ({ showNavbar }) => {
   const token = useSelector((state) => state.auth.token);
   const products = useSelector((state) => state.product.products.product);
   const user = useSelector((state) => state.auth.user.user);
+  const customer = useSelector((state) => state.auth.user.customer);
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState();
@@ -19,10 +20,33 @@ const Home = ({ showNavbar }) => {
   const [searchValue, setSearchValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const checkForHexRegExp = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i
+
   const handleSearch = (e) => {
+    
     e.preventDefault();
     if (searchValue.trim() !== '' && searchValue.trim().length > 2) {
-      setIsSearch(true);
+      if(!isNaN(searchValue[0]) && !checkForHexRegExp.test(searchValue)){
+        //make search value 24 characters long
+        const length=searchValue.length
+        let temp=searchValue
+        for(let i=0;i<24-length;i++){
+          temp=temp+"0"
+
+        }
+        setSearchValue(temp)
+        if(checkForHexRegExp.test(searchValue)){
+        console.log(searchValue)
+        setIsSearch(true);
+        }
+        else{
+          alert('Please enter a valid id')
+        }
+        
+      }
+      else{
+        setIsSearch(true);
+      }
     } else {
       setIsSearch(false);
     }
@@ -35,10 +59,9 @@ const Home = ({ showNavbar }) => {
   const hideModal = () => {
     setIsModalOpen(false);
   };
-
-  const isLogged = () => {
-    if (!token) {
-      navigate('/login');
+    const isLogged = () => {
+    if (!token && token === null && token === undefined) {
+      navigate('/logout');
     }
   };
 
@@ -53,8 +76,11 @@ const Home = ({ showNavbar }) => {
     else if(user) {
       dispatch(getProductbyEmail(user.email))
     }
+    else if(customer) {
+      navigate('/customer')
+    }
     showNavbar();
-  }, [isSearch, dispatch, showNavbar,user,email]);
+  }, [isSearch, dispatch, showNavbar,user,email,token]);
 
   useEffect(() => {
     if (user) {
@@ -63,7 +89,7 @@ const Home = ({ showNavbar }) => {
         setEmail(user.email)
       }
     }
-  }, [user])
+  }, [user, dispatch, email])
 
 
 
@@ -107,12 +133,14 @@ const Home = ({ showNavbar }) => {
             null
           )}
 
-          {(!products || products.length === 0) && (
+          {
+            (!products || products.length === 0) && (
             <div className="d-flex flex-row justify-content-center mt-4">
               <img src={emptyImg} alt="empty" style={{ height: '65vh' }} />
               
             </div>
-          )}
+         )
+        }
         </div>
       </div>
       </div>
